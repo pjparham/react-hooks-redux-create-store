@@ -1,4 +1,18 @@
-let state;
+function createStore() {
+  let state;
+
+  function dispatch(action) {
+    state = reducer(state, action);
+    render();
+  }
+
+  function getState(){
+    return state;
+  }
+
+  return { dispatch, getState }
+}
+
 
 function reducer(state = { count: 0 }, action) {
   switch (action.type) {
@@ -17,12 +31,14 @@ function dispatch(action) {
 
 function render() {
   let container = document.getElementById("container");
-  container.textContent = state.count;
+  container.textContent = store.getState().count;
 }
 
-dispatch({ type: "@@INIT" });
+let store = createStore()
+store.dispatch({ type: "@@INIT" });
+
 let button = document.getElementById("button");
 
-button.addEventListener("click", function () {
-  dispatch({ type: "counter/increment" });
+button.addEventListener("click", () => {
+  store.dispatch({ type: "counter/increment" });
 });
